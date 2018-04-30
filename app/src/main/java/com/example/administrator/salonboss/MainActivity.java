@@ -4,10 +4,12 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ClipData;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -80,8 +82,24 @@ public class MainActivity extends AppCompatActivity {
         //默认的主页
         targetUrl = "http://"+webaddress+"/salonboss/cusorder/"+salnumber;
         webview.loadUrl(targetUrl);
+        SharedPreferences sharedPreferences=getSharedPreferences("mysalonbossid",MODE_PRIVATE);
+        SharedPreferences.Editor editor=sharedPreferences.edit();
+        editor.putInt("salnumber",salnumber);
+        editor.commit();
+        Log.d("nihao", "salonbossid"+salnumber);
+        //通知线程的开始
+        new Thread(newrunnable).start();
     }
 
+    //TODO 最新通知
+    Runnable newrunnable = new Runnable() {
+        @Override
+        public void run() {
+            Intent intent1=new Intent(MainActivity.this,OrderService.class);
+            Log.d("xiancheng", "salonbossid"+salnumber);
+            startService(intent1);
+        }
+    };
     //图片上传
     private void openImageChooserActivity() {
         Intent i = new Intent(Intent.ACTION_GET_CONTENT);
