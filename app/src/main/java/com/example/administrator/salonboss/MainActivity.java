@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     static String webaddress="www.oushelun.cn";
-    static int salnumber=123;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,8 +80,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         //默认的主页
-        targetUrl = "http://"+webaddress+"/salonboss/cusorder/"+salnumber;
+        targetUrl = "http://"+webaddress+"/salonboss/cusorder";
         webview.loadUrl(targetUrl);
+
+    }
+    //登陆后salnumber的储存，mysql的查询
+    @android.webkit.JavascriptInterface
+    public void salnumbersave(final int salnumber){
         SharedPreferences sharedPreferences=getSharedPreferences("mysalonbossid",MODE_PRIVATE);
         SharedPreferences.Editor editor=sharedPreferences.edit();
         editor.putInt("salnumber",salnumber);
@@ -90,13 +95,12 @@ public class MainActivity extends AppCompatActivity {
         //通知线程的开始
         new Thread(newrunnable).start();
     }
-
     //TODO 最新通知
     Runnable newrunnable = new Runnable() {
         @Override
         public void run() {
             Intent intent1=new Intent(MainActivity.this,OrderService.class);
-            Log.d("xiancheng", "salonbossid"+salnumber);
+
             startService(intent1);
         }
     };
